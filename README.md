@@ -17,3 +17,16 @@ Ensure that you have conda installed onto your computer and is included in path.
 ```
 $ conda env create --name envname --file=environments.yml
 ```
+
+## Example Workflow:
+
+### Open Jupyter Lab in Cloned Directory
+```
+$ jupyter lab
+```
+
+### Start Analysis
+Import all necessary functions
+``` python
+from fishSearch.fishSearch import *
+```
