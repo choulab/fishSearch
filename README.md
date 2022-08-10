@@ -26,7 +26,19 @@ $ jupyter lab
 ```
 
 ### Start Analysis
-Import all necessary functions
+Import all Necessary Functions
 ``` python
 from fishSearch.fishSearch import *
+```
+
+Read in Datafile
+``` python
+#function reads in img file and returns datastruct and import file anme
+img, img_name = read_img()
+```
+
+Seperate Channels
+``` python
+#function takes in tiff object and returns seperated images based on number of channels
+seperate_channels(img, img_name)
 ```
