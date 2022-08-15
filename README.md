@@ -26,7 +26,7 @@ jupyter lab
 ```
 
 ### Start Analysis
-Import all Necessary Functions
+#### Import all Necessary Functions
 ``` python
 from fishSearch.fishSearch import *
 ```
