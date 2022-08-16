@@ -12,6 +12,7 @@ git clone https://github.com/buttf7/chouLab_smFISH_analysis.git
 
 ### Example: update clone
 ```
+#cd into working directory
 git pull
 ```
 
