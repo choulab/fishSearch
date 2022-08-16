@@ -22,11 +22,12 @@ Ensure that you have conda installed onto your computer and is included in path.
 ### Example: create Conda environment
 ```
 conda env create --name envname --file=environment.yml
-
-#Check environment was created
-conda info --envs
 ```
 
+### Example: heck environment was created
+```
+conda info --envs
+```
 
 ## Example Workflow:
 
