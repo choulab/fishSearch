@@ -13,6 +13,7 @@ from matplotlib import pyplot as plt
 from cellpose import plot as plt2
 import pandas as pd
 import numpy as np
+import seaborn as sns
 import bigfish.segmentation as segmentation
 from skimage.measure import regionprops
 
