@@ -260,6 +260,6 @@ def plot_cell_intensity():
     
     swarm = sns.swarmplot(data = df, dodge = True, size = 10, linewidth = 2, alpha = 0.4)
     swarm.set_xlabel(condition, fontsize = 10)
-    swarm.set_ylabel("Average Spots Intensity per Cell", fontsize = 10)
+    swarm.set_ylabel("Average Spot Intensity per Cell", fontsize = 10)
     sns.set(font_scale = 7)
     sns.set(style="white")
