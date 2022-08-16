@@ -233,3 +233,18 @@ def spotIntensity(cell_label, rs_spots, img_name):
     
     cellIntensityCount = pd.DataFrame(cell_intensity)
     cellIntensityCount.to_csv(f'./data/graph_data/cellIntensities_{img_name}.csv', index=False)  
+    
+   
+def plot_data():
+    cell_swarm = input("What is the file name?")
+    cell_swarm = f'./data/graph_data/{cell_swarm}'
+    df = pd.read_csv(cell_swarm)
+    df.reset_index()
+    df = df.rename(columns={'0':'AverageCount'})
+    condition = input("what is the condition being tested?")
+    
+    swarm = sns.swarmplot(data = df, dodge = True, size = 10, linewidth = 2, alpha = 0.4)
+    swarm.set_xlabel(condition, fontsize = 10)
+    swarm.set_ylabel("Number of spots per cell", fontsize = 10)
+    sns.set(font_scale = 7)
+    sns.set(style="white")
