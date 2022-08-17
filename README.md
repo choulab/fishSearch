@@ -7,7 +7,7 @@ First on your local machine use git clone to create your version of the reposito
 
 ### Example: git clone
 ```
-git clone https://github.com/buttf7/chouLab_smFISH_analysis.git
+git clone https://github.com/choulab/fishSearch.git
 ```
 
 ### Example: update clone
