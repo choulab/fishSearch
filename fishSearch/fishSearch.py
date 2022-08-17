@@ -46,7 +46,7 @@ def seperate_channels(img, img_name):
     parentDirectory = "./data/separated_channels"
     directory = os.path.join(parentDirectory, 'FISH_SEARCH', 'data')
     for i in range(n_channels):
-        save_name = f"/channel{i}_{img_name}"
+        save_name = f"/channel{i}/channel{i}_{img_name}"
         if n_channels == 3:
             channel = img[:,:,:,i]
             stack.save_image(channel,parentDirectory + save_name)
