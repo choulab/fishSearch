@@ -25,6 +25,7 @@ def read_img():
     img_name = img_path.split("/")
     img_name = img_name[-1]
     img = stack.read_image(img_path)
+    print(img_name)
     print("\r shape: {0}".format(img.shape))
     print("\r dtype: {0}".format(img.dtype))
     return (img, img_name)
