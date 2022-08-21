@@ -13,6 +13,7 @@ from matplotlib import pyplot as plt
 from cellpose import plot as plt2
 import pandas as pd
 import numpy as np
+import seaborn as sns
 import bigfish.segmentation as segmentation
 from skimage.measure import regionprops
 
@@ -87,58 +88,108 @@ def cell_nuc_segmentation(DAPI_2D, RNA_3D, RNA_2D, diam = 100, thresh=40):
     
     return (nuc_label, cell_label)
 
-def rsfish_analysis(RNA_2D):
+def rsfish_analysis(RNA_2D, dimension = 2):
     root = tk.Tk()
     root.withdraw()
     csv_path = filedialog.askopenfilename()
     csv_name = csv_path.split("/")
     csv_name = csv_name[-1]
     
-    df = pd.read_csv(csv_path)
-    intensity_values = df['intensity'].tolist()
-    #spotIntensity(intensity_values)
-    df = df.drop(['intensity','t','c'], axis =1)
-    df = df[['y','x']]
-    rs_spots = df.loc[:, :].values.tolist()
-    rs_spots = np.array(rs_spots)
-    plot.plot_detection(RNA_2D, rs_spots, contrast=True,framesize=(40, 40))
+    if dimension == 2:
+        df = pd.read_csv(csv_path)
+        intensity_values = df['intensity'].tolist()
+        #spotIntensity(intensity_values)
+        df = df.drop(['intensity','t','c'], axis =1)
+        df = df[['y','x']]
+        rs_spots = df.loc[:, :].values.tolist()
+        rs_spots = np.array(rs_spots)
+        plot.plot_detection(RNA_2D, rs_spots, contrast=True,framesize=(40, 40))
+    
+    if dimension == 3:
+        df = pd.read_csv(csv_path)
+        intensity_values = df['intensity'].tolist()
+        #spotIntensity(intensity_values)
+        df = df.drop(['intensity','t','c'], axis =1)
+        df = df[['y','x','z']]
+        rs_spots = np.array(df)
+        plot.plot_detection(RNA_2D, rs_spots, contrast=True,framesize=(40, 40))
     return rs_spots
   
-def cell_extraction(nuc_label, cell_label, rs_spots, RNA_2D):
-    spots_in, spots_out = multistack.identify_objects_in_region(nuc_label, rs_spots, ndim=2)
-    fov_results = multistack.extract_cell(
-    cell_label=cell_label, 
-    ndim=2, 
-    nuc_label=nuc_label, 
-    rna_coord=rs_spots, 
-    image=RNA_2D)
+def cell_extraction(nuc_label, cell_label, rs_spots, RNA_2D, dimension = 2):
+    if dimension == 2:
+        spots_in, spots_out = multistack.identify_objects_in_region(nuc_label, rs_spots, ndim=2)
+        fov_results = multistack.extract_cell(
+            cell_label=cell_label, 
+            ndim=2, 
+            nuc_label=nuc_label, 
+            rna_coord=rs_spots, 
+            image=RNA_2D)
+
+        print("detected spots (inside nuclei)")
+        print("\r shape: {0}".format(spots_in.shape))
+        print("\r dtype: {0}".format(spots_in.dtype), "\n")
+        print("detected spots (outside nuclei)")
+        print("\r shape: {0}".format(spots_out.shape))
+        print("\r dtype: {0}".format(spots_out.dtype))
+        print("number of cells identified: {0}".format(len(fov_results)))
     
-    print("detected spots (inside nuclei)")
-    print("\r shape: {0}".format(spots_in.shape))
-    print("\r dtype: {0}".format(spots_in.dtype), "\n")
-    print("detected spots (outside nuclei)")
-    print("\r shape: {0}".format(spots_out.shape))
-    print("\r dtype: {0}".format(spots_out.dtype))
-    print("number of cells identified: {0}".format(len(fov_results)))
+    if dimension == 3:
+        spots_in, spots_out = multistack.identify_objects_in_region(nuc_label, rs_spots, ndim=3)
+        fov_results = multistack.extract_cell(
+            cell_label=cell_label, 
+            ndim=3, 
+            nuc_label=nuc_label, 
+            rna_coord=spots_no_ts, 
+            others_coord={"foci": foci, "transcription_site": ts},
+            image=image_contrasted,
+            others_image={"dapi": nuc_mip, "smfish": rna_mip})
+        
+        print("detected spots (inside nuclei)")
+        print("\r shape: {0}".format(spots_in.shape))
+        print("\r dtype: {0}".format(spots_in.dtype), "\n")
+        print("detected spots (outside nuclei)")
+        print("\r shape: {0}".format(spots_out.shape))
+        print("\r dtype: {0}".format(spots_out.dtype))
+        print("number of cells identified: {0}".format(len(fov_results)))
+    
     return fov_results
 
-def cell_level_visualization(fov_results):
-    for i, cell_results in enumerate(fov_results):
-        # print("cell {0}".format(i))
+def cell_level_visualization(fov_results, dimension = 2):
+    if dimension == 2:
+        for i, cell_results in enumerate(fov_results):
+            # print("cell {0}".format(i))
 
-        # get cell results
-        cell_mask = cell_results["cell_mask"]
-        cell_coord = cell_results["cell_coord"]
-        nuc_mask = cell_results["nuc_mask"]
-        nuc_coord = cell_results["nuc_coord"]
-        rna_coord = cell_results["rna_coord"]
-        image_contrasted = cell_results["image"]
-        # print("\r number of rna {0}".format(len(rna_coord)))
+            # get cell results
+            cell_mask = cell_results["cell_mask"]
+            cell_coord = cell_results["cell_coord"]
+            nuc_mask = cell_results["nuc_mask"]
+            nuc_coord = cell_results["nuc_coord"]
+            rna_coord = cell_results["rna_coord"]
+            image_contrasted = cell_results["image"]
+            # print("\r number of rna {0}".format(len(rna_coord)))
 
-        #plot cell
+            #plot cell
+            plot.plot_cell(
+                ndim=2, cell_coord=cell_coord, nuc_coord=nuc_coord, 
+                rna_coord=rna_coord, 
+                image=image_contrasted, cell_mask=cell_mask, nuc_mask=nuc_mask, 
+                title="Cell {0}".format(i))
+    
+    if dimension == 3:
+        for i, cell_results in enumerate(fov_results):
+        #print("cell {0}".format(i))
+            # get cell results
+            cell_mask = cell_results["cell_mask"]
+            cell_coord = cell_results["cell_coord"]
+            nuc_mask = cell_results["nuc_mask"]
+            nuc_coord = cell_results["nuc_coord"]
+            rna_coord = cell_results["rna_coord"]
+            image_contrasted = cell_results["image"]
+ 
+        # plot cell
         plot.plot_cell(
-            ndim=2, cell_coord=cell_coord, nuc_coord=nuc_coord, 
-            rna_coord=rna_coord, 
+            ndim=3, cell_coord=cell_coord, nuc_coord=nuc_coord, 
+            rna_coord=rna_coord, foci_coord=foci_coord, other_coord=ts_coord, 
             image=image_contrasted, cell_mask=cell_mask, nuc_mask=nuc_mask, 
             title="Cell {0}".format(i))
 
@@ -233,3 +284,32 @@ def spotIntensity(cell_label, rs_spots, img_name):
     
     cellIntensityCount = pd.DataFrame(cell_intensity)
     cellIntensityCount.to_csv(f'./data/graph_data/cellIntensities_{img_name}.csv', index=False)  
+    
+   
+def plot_cell_swarm():
+    cell_swarm = input("What is the cell spot file name?")
+    cell_swarm = f'./data/graph_data/{cell_swarm}'
+    df = pd.read_csv(cell_swarm)
+    df.reset_index()
+    df = df.rename(columns={'0':'AverageCount'})
+    condition = input("what is the condition being tested?")
+    
+    swarm = sns.swarmplot(data = df, dodge = True, size = 10, linewidth = 2, alpha = 0.4)
+    swarm.set_xlabel(condition, fontsize = 10)
+    swarm.set_ylabel("Number of spots per cell", fontsize = 10)
+    sns.set(font_scale = 7)
+    sns.set(style="white")
+    
+def plot_cell_intensity():
+    cell_intensity = input("What is the cell intensity file name?")
+    cell_intensity = f'./data/graph_data/{cell_intensity}'
+    df = pd.read_csv(cell_intensity)
+    df.reset_index()
+    df = df.rename(columns={'0':'SpotIntensity'})
+    condition = input("what is the condition being tested?")
+    
+    swarm = sns.swarmplot(data = df, dodge = True, size = 10, linewidth = 2, alpha = 0.4)
+    swarm.set_xlabel(condition, fontsize = 10)
+    swarm.set_ylabel("Average Spot Intensity per Cell", fontsize = 10)
+    sns.set(font_scale = 7)
+    sns.set(style="white")

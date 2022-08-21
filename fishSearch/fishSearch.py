@@ -115,7 +115,7 @@ def rsfish_analysis(RNA_2D, dimension = 2):
         plot.plot_detection(RNA_2D, rs_spots, contrast=True,framesize=(40, 40))
     return rs_spots
   
-def cell_extraction(nuc_label, cell_label, rs_spots, RNA_2D, dimension):
+def cell_extraction(nuc_label, cell_label, rs_spots, RNA_2D, dimension = 2):
     if dimension == 2:
         spots_in, spots_out = multistack.identify_objects_in_region(nuc_label, rs_spots, ndim=2)
         fov_results = multistack.extract_cell(
@@ -154,7 +154,7 @@ def cell_extraction(nuc_label, cell_label, rs_spots, RNA_2D, dimension):
     
     return fov_results
 
-def cell_level_visualization(fov_results, dimension == 2):
+def cell_level_visualization(fov_results, dimension = 2):
     if dimension == 2:
         for i, cell_results in enumerate(fov_results):
             # print("cell {0}".format(i))
