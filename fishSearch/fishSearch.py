@@ -110,7 +110,7 @@ def rsfish_analysis(RNA_2D, dimension = 2):
         intensity_values = df['intensity'].tolist()
         #spotIntensity(intensity_values)
         df = df.drop(['intensity','t','c'], axis =1)
-        df = df[['y','x','z']]
+        df = df[['z','y','x']]
         rs_spots = np.array(df)
         plot.plot_detection(RNA_2D, rs_spots, contrast=True,framesize=(40, 40))
     return rs_spots
