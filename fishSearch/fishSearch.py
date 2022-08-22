@@ -46,7 +46,7 @@ def seperate_channels(img, img_name):
     parentDirectory = "./data/separated_channels"
     directory = os.path.join(parentDirectory, 'FISH_SEARCH', 'data')
     for i in range(n_channels):
-        save_name = f"/channel{i}_{img_name}"
+        save_name = f"/channel_{i}/channel{i}_{img_name}"
         if n_channels == 3:
             channel = img[:,:,:,i]
             stack.save_image(channel,parentDirectory + save_name)
@@ -110,7 +110,7 @@ def rsfish_analysis(RNA_2D, dimension = 2):
         intensity_values = df['intensity'].tolist()
         #spotIntensity(intensity_values)
         df = df.drop(['intensity','t','c'], axis =1)
-        df = df[['y','x','z']]
+        df = df[['z','y','x']]
         rs_spots = np.array(df)
         plot.plot_detection(RNA_2D, rs_spots, contrast=True,framesize=(40, 40))
     return rs_spots
