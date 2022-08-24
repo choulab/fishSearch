@@ -140,9 +140,7 @@ def cell_extraction(nuc_label, cell_label, rs_spots, RNA_2D, dimension = 2):
             ndim=3, 
             nuc_label=nuc_label, 
             rna_coord=rs_spots, 
-            others_coord={"foci": foci, "transcription_site": ts},
-            image=image_contrasted,
-            others_image={"dapi": nuc_mip, "smfish": rna_mip})
+            image=RNA_2D)
         
         print("detected spots (inside nuclei)")
         print("\r shape: {0}".format(spots_in.shape))
