@@ -187,7 +187,7 @@ def cell_level_visualization(fov_results, dimension = 2):
         # plot cell
         plot.plot_cell(
             ndim=3, cell_coord=cell_coord, nuc_coord=nuc_coord, 
-            rna_coord=rna_coord, foci_coord=foci_coord, other_coord=ts_coord, 
+            rna_coord=rna_coord,
             image=image_contrasted, cell_mask=cell_mask, nuc_mask=nuc_mask, 
             title="Cell {0}".format(i))
 
