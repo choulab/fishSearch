@@ -29,7 +29,7 @@ def read_img():
     print("\r dtype: {0}".format(img.dtype))
     return (img, img_name)
 
-def seperate_channels(img, img_name):    
+def separate_channels(img, img_name):    
     #Sorted shape
     sorted_shape = sorted([i for i in img.shape])
     n_channels = sorted_shape[0]
@@ -88,7 +88,7 @@ def cell_nuc_segmentation(DAPI_2D, RNA_3D, RNA_2D, diam = 100, thresh=40):
     
     return (nuc_label, cell_label)
 
-def rsfish_analysis(RNA_2D, dimension = 2):
+def rsfish_analysis(RNA_2D, dimension = 3):
     root = tk.Tk()
     root.withdraw()
     csv_path = filedialog.askopenfilename()
@@ -139,10 +139,8 @@ def cell_extraction(nuc_label, cell_label, rs_spots, RNA_2D, dimension = 2):
             cell_label=cell_label, 
             ndim=3, 
             nuc_label=nuc_label, 
-            rna_coord=spots_no_ts, 
-            others_coord={"foci": foci, "transcription_site": ts},
-            image=image_contrasted,
-            others_image={"dapi": nuc_mip, "smfish": rna_mip})
+            rna_coord=rs_spots, 
+            image=RNA_2D)
         
         print("detected spots (inside nuclei)")
         print("\r shape: {0}".format(spots_in.shape))
@@ -187,11 +185,11 @@ def cell_level_visualization(fov_results, dimension = 2):
             image_contrasted = cell_results["image"]
  
         # plot cell
-        plot.plot_cell(
-            ndim=3, cell_coord=cell_coord, nuc_coord=nuc_coord, 
-            rna_coord=rna_coord, foci_coord=foci_coord, other_coord=ts_coord, 
-            image=image_contrasted, cell_mask=cell_mask, nuc_mask=nuc_mask, 
-            title="Cell {0}".format(i))
+            plot.plot_cell(
+                ndim=3, cell_coord=cell_coord, nuc_coord=nuc_coord, 
+                rna_coord=rna_coord,
+                image=image_contrasted, cell_mask=cell_mask, nuc_mask=nuc_mask, 
+                title="Cell {0}".format(i))
 
 def spotCount(fov_results, img_name):
     averageCount = []
